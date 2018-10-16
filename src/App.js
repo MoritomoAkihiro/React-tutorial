@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
+  //renderで画面に表示する内容を記述している。
   render() {
     return (
       <div className="App">

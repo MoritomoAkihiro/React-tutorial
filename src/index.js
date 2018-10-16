@@ -59,6 +59,7 @@ class Game extends React.Component {
 
 // ========================================
 
+//上のGameコンポーネントでレンダリングされたDOMが入る
 ReactDOM.render(
   <Game />,
   document.getElementById('container')
