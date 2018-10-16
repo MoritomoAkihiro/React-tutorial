@@ -3,10 +3,18 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class Square extends React.Component {
+  //コンストラクタ宣言してstateを初期化した
+    constractor(){
+      super();
+      this.state = {
+        value:null,
+      };
+    }
   render() {
     return (
-      <button className="square"　onClick={()=>alert('click')}>
-        {this.props.value}
+      //buttonクリックすると、stateのvalueにｘが入る。
+      <button className="square"　onClick={()=>this.setState({value: 'X'})}>
+        {this.state.value}
       </button>
     );
   }
