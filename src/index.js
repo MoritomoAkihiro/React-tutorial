@@ -6,15 +6,17 @@ class Square extends React.Component {
   render() {
     return (
       <button className="square">
-        {/* TODO */}
+        {this.props.value}
       </button>
     );
   }
 }
 
 class Board extends React.Component {
+  //後のrenderSquareをここで定義している
   renderSquare(i) {
-    return <Square />;
+    //squareコンポーネントにpropsを渡している
+    return <Square value={i}/>;//squareのvalueに数字を渡している
   }
   render() {
     const status = 'Next player: X';
