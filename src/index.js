@@ -3,35 +3,40 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class Square extends React.Component {
-  //コンストラクタ宣言してstateを初期化した
-    constructor(){
-      super();
-      this.state = {
-        value:null,
-      };
-    }
+//stateを持っていないためコンストラクタを消した。
   render() {
     return (
-      //buttonクリックすると、stateのvalueにｘが入る。
-      <button className="square"　onClick={()=>this.setState({value: 'X'})}>
-        {this.state.value}
+      //buttonクリックすると、親からの（boare）onClickが呼び出される
+      <button className="square"　onClick={()=>this.props.onClick()}>
+        {this.props.value}
       </button>
     );
   }
 }
 
 class Board extends React.Component {
+  //初期化してる
   constructor(){
     super();
     this.state={
-      squares:Array(9).fill(null),
+      squares:Array(9).fill(null),//これで、boardコンポーネントが〇×のstateを保持している
     };
+  }
+  handleClick(i){
+    //slice()は配列を抜き出す関数なので、なくてもいいが、イミュータブルと言う概念の元これを使っている？
+    const squares = this.state.squares.slice();
+    squares[i] = 'X';
+    //squaresをコンストラクターで初期化したsquaresからここで定義したconstのsquaresに入れなおす
+    this.setState({squares:squares});
   }
   //後のrenderSquareをここで定義している
   renderSquare(i) {
-    //squareコンポーネントにpropsを渡している
-    return <Square value={this.state.squares[i]}/>;//squareのvalueに配列のその番号を渡している
-  }
+    return (
+      <Square value={this.state.squares[i]}
+        onClick={()=> this.handleClick(i)}
+        />//onClickに新しい関数を代入している
+      );
+    }
   render() {
     const status = 'Next player: X';
     return (
