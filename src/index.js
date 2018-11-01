@@ -4,7 +4,7 @@ import './index.css';
 
 class Square extends React.Component {
   //コンストラクタ宣言してstateを初期化した
-    constractor(){
+    constructor(){
       super();
       this.state = {
         value:null,
@@ -21,10 +21,16 @@ class Square extends React.Component {
 }
 
 class Board extends React.Component {
+  constructor(){
+    super();
+    this.state={
+      squares:Array(9).fill(null),
+    };
+  }
   //後のrenderSquareをここで定義している
   renderSquare(i) {
     //squareコンポーネントにpropsを渡している
-    return <Square value={i}/>;//squareのvalueに数字を渡している
+    return <Square value={this.state.squares[i]}/>;//squareのvalueに配列のその番号を渡している
   }
   render() {
     const status = 'Next player: X';
