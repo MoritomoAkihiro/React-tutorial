@@ -26,16 +26,23 @@ class Board extends React.Component {
   //初期化してる
   constructor(){
     super();
+    //stateの初期化
     this.state={
       squares:Array(9).fill(null),//これで、boardコンポーネントが〇×のstateを保持している
+      xIsNext:true,//順番を決める
     };
   }
   handleClick(i){
     //slice()は配列を抜き出す関数なので、なくてもいいが、イミュータブルと言う概念の元これを使っている？
     const squares = this.state.squares.slice();
-    squares[i] = 'X';
+    //stateのxIsNextがどうかで次置かれるやつがXかOか決まる
+    squares[i] = this.state.xIsNext ? 'X':'O';
     //squaresをコンストラクターで初期化したsquaresからここで定義したconstのsquaresに入れなおす
-    this.setState({squares:squares});
+    //Stateをそれぞれ設定する。
+    this.setState({
+      squares:squares,
+      xIsNext: !this.state.xIsNext,//!で逆の方にする。
+    });
   }
   //後のrenderSquareをここで定義している
   renderSquare(i) {
@@ -46,7 +53,8 @@ class Board extends React.Component {
       );
     }
   render() {
-    const status = 'Next player: X';
+    const status = 'Next player: '+(this.state.xIsNext ? 'X':'O');
+
     return (
       <div>
         <div className="status">{status}</div>
