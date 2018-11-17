@@ -35,6 +35,10 @@ class Board extends React.Component {
   handleClick(i){
     //slice()は配列を抜き出す関数なので、なくてもいいが、イミュータブルと言う概念の元これを使っている？
     const squares = this.state.squares.slice();
+    //すでに勝者が決まっているときはreturnする
+    if (calculateWinner(squares)||squares[i]){
+      return;
+    }
     //stateのxIsNextがどうかで次置かれるやつがXかOか決まる
     squares[i] = this.state.xIsNext ? 'X':'O';
     //squaresをコンストラクターで初期化したsquaresからここで定義したconstのsquaresに入れなおす
@@ -53,7 +57,15 @@ class Board extends React.Component {
       );
     }
   render() {
-    const status = 'Next player: '+(this.state.xIsNext ? 'X':'O');
+    const winner = calculateWinner(this.state.squares);
+    let status;
+    if(winner){
+      status = 'Winner:'+winner;
+    }else{
+      status='Next player:'+(this.state.xIsNext? 'X':'O');
+    }
+
+    // const status = 'Next player: '+(this.state.xIsNext ? 'X':'O');
 
     return (
       <div>
@@ -101,9 +113,10 @@ ReactDOM.render(
   <Game />,
   document.getElementById('container')
 );
-
+//勝利者をきめるやつ
 function calculateWinner(squares) {
   const lines = [
+    //縦横斜めのラインを定義
     [0, 1, 2],
     [3, 4, 5],
     [6, 7, 8],
@@ -113,8 +126,10 @@ function calculateWinner(squares) {
     [0, 4, 8],
     [2, 4, 6],
   ];
+  //9回見直す。
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
+    //型まで比較する厳密透過演算子a,b,c,同じマークであったらif文が通る。
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
       return squares[a];
     }
