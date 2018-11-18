@@ -43,19 +43,8 @@ class Board extends React.Component {
       );
     }
   render() {
-    const winner = calculateWinner(this.state.squares);
-    let status;
-    if(winner){
-      status = 'Winner:'+winner;
-    }else{
-      status='Next player:'+(this.state.xIsNext? 'X':'O');
-    }
-
-    // const status = 'Next player: '+(this.state.xIsNext ? 'X':'O');
-
     return (
       <div>
-        //<div className="status">{status}</div>
         <div className="board-row">
           {this.renderSquare(0)}
           {this.renderSquare(1)}
@@ -90,7 +79,7 @@ class Game extends React.Component {
     const history = this.state.history;
     const current = history[history.length -1 ];
     //slice()は配列を抜き出す関数なので、なくてもいいが、イミュータブルと言う概念の元これを使っている？
-    const squares = this.state.squares.slice();
+    const squares =current.squares.slice();
     //すでに勝者が決まっているときはreturnする
     if (calculateWinner(squares)||squares[i]){
       return;
