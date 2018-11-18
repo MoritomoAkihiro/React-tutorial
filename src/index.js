@@ -23,36 +23,22 @@ function Square(props){
 }
 
 class Board extends React.Component {
-  //初期化してる
-  constructor(){
-    super();
-    //stateの初期化
-    this.state={
-      squares:Array(9).fill(null),//これで、boardコンポーネントが〇×のstateを保持している
-      xIsNext:true,//順番を決める
-    };
-  }
-  handleClick(i){
-    //slice()は配列を抜き出す関数なので、なくてもいいが、イミュータブルと言う概念の元これを使っている？
-    const squares = this.state.squares.slice();
-    //すでに勝者が決まっているときはreturnする
-    if (calculateWinner(squares)||squares[i]){
-      return;
-    }
-    //stateのxIsNextがどうかで次置かれるやつがXかOか決まる
-    squares[i] = this.state.xIsNext ? 'X':'O';
-    //squaresをコンストラクターで初期化したsquaresからここで定義したconstのsquaresに入れなおす
-    //Stateをそれぞれ設定する。
-    this.setState({
-      squares:squares,
-      xIsNext: !this.state.xIsNext,//!で逆の方にする。
-    });
-  }
+  // stateをGmaeまで引き上げたため削除
+  // //初期化してる
+  // constructor(){
+  //   super();
+  //   //stateの初期化
+  //   this.state={
+  //     squares:Array(9).fill(null),//これで、boardコンポーネントが〇×のstateを保持している
+  //     xIsNext:true,//順番を決める
+  //   };
+  // }
+
   //後のrenderSquareをここで定義している
   renderSquare(i) {
     return (
-      <Square value={this.state.squares[i]}
-        onClick={()=> this.handleClick(i)}
+      <Square value={this.props.squares[i]}
+        onClick={()=> this.props.onClick(i)}
         />//onClickに新しい関数を代入している
       );
     }
@@ -69,7 +55,7 @@ class Board extends React.Component {
 
     return (
       <div>
-        <div className="status">{status}</div>
+        //<div className="status">{status}</div>
         <div className="board-row">
           {this.renderSquare(0)}
           {this.renderSquare(1)}
@@ -91,14 +77,56 @@ class Board extends React.Component {
 }
 
 class Game extends React.Component {
+  constructor(){
+    super();
+    this.state = {
+      history:[{
+        squares: Array(9).fill(null),
+      }],
+      xIsNext: true,
+    };
+  }
+  handleClick(i){
+    const history = this.state.history;
+    const current = history[history.length -1 ];
+    //slice()は配列を抜き出す関数なので、なくてもいいが、イミュータブルと言う概念の元これを使っている？
+    const squares = this.state.squares.slice();
+    //すでに勝者が決まっているときはreturnする
+    if (calculateWinner(squares)||squares[i]){
+      return;
+    }
+    //stateのxIsNextがどうかで次置かれるやつがXかOか決まる
+    squares[i] = this.state.xIsNext ? 'X':'O';
+    //squaresをコンストラクターで初期化したsquaresからここで定義したconstのsquaresに入れなおす
+    //Stateをそれぞれ設定する。
+    this.setState({
+      history:history.concat([{
+        squares:squares,
+      }]),
+      xIsNext: !this.state.xIsNext,//!で逆の方にする。
+    });
+  }
   render() {
+    const history = this.state.history;
+    const current = history[history.length -1 ];
+    const winner = calculateWinner(current.squares);
+
+    let status;
+    if(winner){
+      status = "Winner:"+winner;
+    }else{
+      status = "Next player:"+(this.state.xIsNext ? 'X':'O');
+    }
     return (
       <div className="game">
         <div className="game-board">
-          <Board />
+          <Board
+            squares = {current.squares}
+            onClick={(i)=>this.handleClick(i)}
+            />
         </div>
         <div className="game-info">
-          <div>{/* status */}</div>
+          <div>{ status }</div>
           <ol>{/* TODO */}</ol>
         </div>
       </div>
