@@ -72,6 +72,7 @@ class Game extends React.Component {
       history:[{
         squares: Array(9).fill(null),
       }],
+      stepNumber:0,
       xIsNext: true,
     };
   }
@@ -92,13 +93,40 @@ class Game extends React.Component {
       history:history.concat([{
         squares:squares,
       }]),
+      stepNumber: history.length,
       xIsNext: !this.state.xIsNext,//!で逆の方にする。
     });
   }
+
+  jumpTo(step){
+    this.setState({
+      stepNumber: step,
+      xIsNext: (step % 2)===0,
+    });
+  }
+
+
   render() {
     const history = this.state.history;
-    const current = history[history.length -1 ];
+    const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
+//mapはhistoryの配列をいじるメソッド
+    const moves = history.map((step,move)=>{
+      //三項演算子
+      //moveされてなかったら（move=0）右のgame startが表示される
+      //moveされてたら(move≠0)moveの番号が表示
+      const desc = move? 'Move #'+move : 'Game start';
+      //keyはレンダリングする際に同一性を確認するために必要である
+      return(
+        <li key={move}>
+          <a herf = "#" onClick={()=> this.jumpTo(move)}>
+            {desc}
+          </a>
+        </li>
+      );
+    });
+
+
 
     let status;
     if(winner){
@@ -106,6 +134,7 @@ class Game extends React.Component {
     }else{
       status = "Next player:"+(this.state.xIsNext ? 'X':'O');
     }
+
     return (
       <div className="game">
         <div className="game-board">
@@ -116,7 +145,7 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{ status }</div>
-          <ol>{/* TODO */}</ol>
+          <ol>{moves}</ol>
         </div>
       </div>
     );
